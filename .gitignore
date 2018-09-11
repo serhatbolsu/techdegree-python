@@ -1,0 +1,24 @@
+/*.pyc
+*.pyc
+.idea/
+/*.iml
+/dist
+
+# Virtualenv
+/venv/*
+/venv/.Python
+/venv/pip-selfcheck.json
+/venv/bin
+/venv/lib
+/venv/include
+.venv
+
+
+# Logs
+*.log
+/log
+*.pid
+
+
+# Vagrant
+.vagrant

@@ -1,0 +1,7 @@
+Raptors
+Phillip Helm,44,YES,Thomas Helm and Eva Jones
+Les Clay,42,YES,Wynonna Brown
+Herschel Krustofski,45,YES,Hyman and Rachel Krustofski
+Ben Finkelstein,44,NO,Aaron and Jill Finkelstein
+Chloe Alaska,47,NO,David and Jamie Alaska
+Arnold Willis,43,NO,Claire Willis
