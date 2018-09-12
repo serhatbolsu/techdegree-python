@@ -2,7 +2,7 @@ import os, sys
 
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from unit_3.csv_operation import CsvOperation
+from project_3.csv_operation import CsvOperation
 
 csv = CsvOperation('work_log.csv')
 
