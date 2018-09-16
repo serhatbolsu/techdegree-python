@@ -16,7 +16,7 @@ def entry_menu(data_list):
         print(f"Time Spent: {data[2]} minutes,")
         print(f"Notes: {data[3]}")
         print()
-        print(f"Result {str(pointer+1)} or {str(len(data_list))}")
+        print(f"Result {str(pointer+1)} of {str(len(data_list))}")
         action = str(input("[N]ext, [E]dit, [D]elete, [R]eturn to search menu \n>"))
         if action.upper() == 'N':
             pointer +=1
