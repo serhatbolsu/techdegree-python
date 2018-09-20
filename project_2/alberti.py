@@ -1,5 +1,5 @@
-
 from ciphers import Cipher
+
 
 class Alberti(Cipher):
     def __init__(self, AEaualInner='g'):
@@ -42,7 +42,6 @@ class Alberti(Cipher):
                     each_word.append(l)
             encrypted.append(''.join(each_word))
         return ' '.join(encrypted)
-
 
 
 if __name__ == '__main__':

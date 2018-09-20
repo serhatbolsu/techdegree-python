@@ -1,13 +1,14 @@
 import operator
 import re
 
+
 class Alphabet:
     def __init__(self, alphabet_type='latin'):
         if alphabet_type == 'latin':
             self.__alphabet = 'abcdefghijklmnopqrstuvwxyz'
             self.__type = 'latin'
         else:
-            pass #TODO: add other required alphabets
+            pass  # TODO: add other required alphabets
 
     def set_alphabet(self, alphabet):
         if type(alphabet) is str:
@@ -46,7 +47,7 @@ class Cipher(Alphabet):
     def decrypt(self, *args):
         raise NotImplementedError()
 
-    def one_time_pad(self,text, key, method='encrypt'):
+    def one_time_pad(self, text, key, method='encrypt'):
         if type(key) is int:
             key_indexes = [int(l) for l in str(key)]
         else:
@@ -57,14 +58,14 @@ class Cipher(Alphabet):
         text_filtered = ''.join(list(
             filter(re.compile('[a-zA-Z]').match, list(text))
         ))
-        message_partitioned = [list(text_filtered[i: i + len(key_indexes)]) for i in range(0,len(text_filtered),
+        message_partitioned = [list(text_filtered[i: i + len(key_indexes)]) for i in range(0, len(text_filtered),
                                                                                            len(key_indexes))
                                ]
         message_final = []
         for part in message_partitioned:
             part_indexes = self.text_to_alphabet_position_list(''.join(part))
             encrypted_word = list(
-                map(lambda x: op_func(x[0],x[1]) %len(self.get_alphabet()),list(zip(part_indexes, key_indexes)))
+                map(lambda x: op_func(x[0], x[1]) % len(self.get_alphabet()), list(zip(part_indexes, key_indexes)))
             )
             message_final.append(''.join(self.alphabet_position_list_to_text(encrypted_word)).upper())
         return ''.join(message_final)

@@ -1,7 +1,7 @@
-from project_2.alberti import Alberti
-from project_2.atbash import Atbash
-from project_2.polybius_square import PolybiusSquare
-from project_2.transposition import Transposition
+from alberti import Alberti
+from atbash import Atbash
+from polybius_square import PolybiusSquare
+from transposition import Transposition
 
 
 def main():
@@ -10,7 +10,7 @@ def main():
     name = str(input("Please enter your name: "))
     print("Hi {},".format(name.capitalize()))
     encryption = {'Alberti': Alberti, 'Atbash': Atbash, 'Polybius': PolybiusSquare,
-                   'Transposition': Transposition}
+                  'Transposition': Transposition}
 
     game = True
     while game:
@@ -50,9 +50,6 @@ def main():
         cont = str(input("Do you want to continue (yes/no) : "))
         if not cont.lower() == 'yes':
             game = False
-
-
-
 
 
 if __name__ == '__main__': main()

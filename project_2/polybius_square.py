@@ -5,10 +5,10 @@ class PolybiusSquare(Cipher):
     def __init__(self):
         super().__init__()
         numbers = [(x, y) for y in [1, 2, 3, 4, 5] for x in [1, 2, 3, 4, 5]]
-        alphabet = self.get_latin25() # i/j are combined for simplification
+        alphabet = self.get_latin25()  # i/j are combined for simplification
         numbers.sort()
-        self._encrpyt_cipher = {k: '{}{}'.format(v[0],v[1]) for k, v in dict(zip(alphabet, numbers)).items()}
-        self._decrypt_cipher = {'{}{}'.format(k[0],k[1]): v for k, v in dict(zip(numbers, alphabet)).items()}
+        self._encrpyt_cipher = {k: '{}{}'.format(v[0], v[1]) for k, v in dict(zip(alphabet, numbers)).items()}
+        self._decrypt_cipher = {'{}{}'.format(k[0], k[1]): v for k, v in dict(zip(numbers, alphabet)).items()}
 
     def encrypt(self, data):
         """
@@ -47,11 +47,12 @@ class PolybiusSquare(Cipher):
             while end_slice <= len(word):
                 key = word[start_slice:end_slice]
                 each_word.append(self._decrypt_cipher[key])
-                start_slice +=2
-                end_slice +=2
+                start_slice += 2
+                end_slice += 2
             enc_word = ''.join(each_word)
             encrypted.append(enc_word)
         return ' '.join(encrypted)
+
 
 if __name__ == '__main__':
     poly = PolybiusSquare()
