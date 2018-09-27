@@ -75,7 +75,7 @@ class CsvOperation:
         with open(self.file) as f:
             data = csv.reader(f)
             for line in data:
-                if int(line[2]) == int(time_spend):
+                if int(line[2]) == time_spend:
                     result.append(','.join(line))
         return result
 

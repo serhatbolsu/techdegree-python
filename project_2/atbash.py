@@ -1,4 +1,4 @@
-from .ciphers import Cipher
+from ciphers import Cipher
 
 
 class Atbash(Cipher):

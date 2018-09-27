@@ -41,7 +41,7 @@ class Transposition(Cipher):
         order = np.argsort(self.permutation)
         data_array_c = pre_array[:, order]
         data_array_final = data_array_c.T
-        return  ''.join([char for word in data_array_final for char in word])
+        return ''.join([char for word in data_array_final for char in word])
 
     def decrypt(self, data):
         data_filtered = ''.join(list(filter(re.compile('[a-zA-Z]').match, list(data))))
