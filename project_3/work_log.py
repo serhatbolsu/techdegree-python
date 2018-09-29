@@ -53,7 +53,7 @@ def search_by_date():
         try:
             os.system("clear")
             print("Enter the date")
-            user_date = str(input("Please use DD/MM/YYYY: "))
+            user_date = input("Please use DD/MM/YYYY: ").strip()
             result = csv.find_by_date(user_date)
         except:
             print(f"Your input '{user_date}' not correct")
@@ -67,8 +67,8 @@ def search_by_time_spent():
         try:
             os.system("clear")
             print("Enter the time spent")
-            user_input = int(input("As in minutes (ex. 30): "))
-            result = csv.find_by_time_spent(user_input)
+            user_input = input("As in minutes (ex. 30): ")
+            result = csv.find_by_time_spent(int(user_input))
         except:
             print(f"Your input '{user_input}' not correct")
             input("Press enter to try again")
@@ -81,7 +81,7 @@ def search_by_text():
         try:
             os.system("clear")
             print("Input keyword will be search upon title/notes")
-            user_input = str(input("Please enter keyword: "))
+            user_input = str(input("Please enter keyword: ").strip())
             result = csv.find_by_keyword(user_input)
         except:
             print(f"Your input '{user_input}' not correct")
@@ -95,7 +95,7 @@ def search_by_pattern():
         try:
             os.system("clear")
             print("")
-            user_input = str(input("Please input regex pattern: "))
+            user_input = str(input("Please input regex pattern: ").strip())
             result = csv.find_by_regex_pattern(user_input)
         except:
             print(f"Your input '{user_input}' not correct")
@@ -109,7 +109,7 @@ def search_by_range_dates():
         try:
             os.system("clear")
             print("Enter the start and end date")
-            user_date = str(input("Please use 'DD/MM/YYYY,DD/MM/YYYY': "))
+            user_date = input("Please use 'DD/MM/YYYY,DD/MM/YYYY': ").strip()
             if not len(re.findall(r'(\d{2})/(\d{2})/(\d{4})',
                                   user_date)) == 2:
                 raise ValueError
@@ -179,7 +179,7 @@ def add_new_entry():
         while True:
             try:
                 os.system("clear")
-                field = str(input(v)).strip()
+                field = str(input(v).strip())
                 if k == 'time_spend' and (1 > int(field) or int(field) > 1000):
                     raise ValueError()
                 else:

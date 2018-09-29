@@ -44,10 +44,11 @@ class CsvOperation:
                 for i, line in enumerate(data):
                     line = ','.join(line)
                     _d = re.match(r'(\d{2})(\/\d{2})(\/\d{4})', line)[0]
-                    date = datetime.datetime.strptime(_d,"%d/%m/%Y")
+                    date = datetime.datetime.strptime(_d, "%d/%m/%Y")
                     item = {'index': i, 'date': date, 'line': line}
                     _result.append(item)
             return _result
+
         result = []
         date1 = datetime.datetime.strptime(date1, '%d/%m/%Y')
         date2 = datetime.datetime.strptime(date2, '%d/%m/%Y')
@@ -57,7 +58,7 @@ class CsvOperation:
                 result.append(item['line'])
         return result
 
-    def find_by_keyword(self,keyword):
+    def find_by_keyword(self, keyword):
         with open(self.file) as f:
             data = f.read()
             # Find in title
@@ -81,10 +82,13 @@ class CsvOperation:
 
     def find_by_regex_pattern(self, regex):
         re_string = r'{}'.format(regex)
+        pattern = re.compile(re_string, re.VERBOSE)
         with open(self.file) as f:
-            data = f.read()
-            pattern = re.compile(re_string, re.VERBOSE)
-            result = re.findall(pattern, data)
+            data = csv.reader(f)
+            result = list(
+                map(lambda x: ','.join(x),
+                    filter(lambda x: re.findall(pattern, ','.join(x)), data
+                           )))
         return result
 
     def delete_row(self, entry):
@@ -110,10 +114,8 @@ if __name__ == '__main__':
     print(mycsv.find_by_time_spent(30))
     print("By Regex:")
     print(mycsv.find_by_regex_pattern("([^\s].*)"))
+    print("By Regex:")
+    print(mycsv.find_by_regex_pattern("\w+"))
     print("By Range: ")
     print(mycsv.find_by_date_range("01/10/2018", "30/12/2010"))
     print(mycsv.delete_row("10/09/2018,unit6,46,almost finished and I am gbloobb"))
-
-
-
-
