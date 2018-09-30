@@ -115,7 +115,7 @@ def search_by_range_dates():
                 raise ValueError
             result = csv.find_by_date_range(user_date.split(',')[0],
                                             user_date.split(',')[1])
-        except ValueError:
+        except:
             print(f"Your input '{user_date}' not correct")
             input("Press enter to try again")
         else:
