@@ -106,6 +106,9 @@ class CRUDTests(BaseTests):
         self.task3 = Task.create(employee="test_other_employee", task="Reading",
                                  startdate=datetime.datetime.now().date(),
                                  duration=50, notes="Very fun times")
+        self.task4 = Task.create(employee="Ztest_other_employeeZ", task="Reading",
+                                 startdate=datetime.datetime.now().date(),
+                                 duration=50, notes="Very hard times")
 
     def test_create_entry(self):
         name = "Test_user2"
@@ -119,12 +122,12 @@ class CRUDTests(BaseTests):
 
     @mock.patch('sys.stdout', new_callable=StringIO)
     def test_find_by_employee_entry(self, mock_stdout):
-        user_input = ["0"]  # select the user with most entries
+        user_input = ["test_other_employee", "0"]  # select the user with most entries
         with mock.patch('builtins.input', side_effect=user_input):
             with mock.patch('app.display_tasks', side_effect=[""]):
                 find_by_employee()
-                self.assertIn("test_cruid".capitalize(), mock_stdout.getvalue())
-                self.assertIn("has 2 entries",
+                self.assertIn("test_other_employee", mock_stdout.getvalue())
+                self.assertIn("has 1 entries",
                               mock_stdout.getvalue())  # check the # of entries for that user
 
     def test_find_by_employee_entry_wrong_selection(self):
@@ -142,6 +145,17 @@ class CRUDTests(BaseTests):
                 assert args[0].get().employee == 'test_cruid'
                 assert args[0].get().task == "Thinking"
                 assert len(args[0]) == 1
+
+    def test_find_by_date_range(self):
+        user_input = "01/01/1990-12/30/2018"
+        with mock.patch('builtins.input', return_value=user_input):
+            with mock.patch('app.display_tasks') as mock_display_tasks:
+                find_by_date_range()
+                assert mock_display_tasks.called
+                args = mock_display_tasks.call_args_list[0][0]
+                assert args[0].get().employee == 'test_cruid'
+                assert args[0].get().task == "Writing Test Cases"
+                assert args[0].count() == 4
 
     def test_by_time_spent(self):
         user_input = "299"

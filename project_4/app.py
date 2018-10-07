@@ -51,22 +51,36 @@ def display_tasks(tasks):
 
 def find_by_employee():
     """Find by Employee"""
-    employees = {}
     clear_screen()
-    print("Choose one of the employee to see what he/she worked on: \n")
-    for i, t in enumerate(Task.select(Task.employee,
-                                      fn.COUNT(Task.id).alias('count')
-                                      ).group_by(Task.employee).order_by(fn.COUNT(Task.id).desc())):
-        employees[i] = {'id': t.id, 'name': t.employee, "count": t.count}
-        print(f"{str(i)}) {t.employee.capitalize()} has {t.count} entries")
-    while True:
-        try:
-            selection = input("Enter employee to view all entries:\n> ").strip()
-            tasks = Task.select().where(Task.employee == employees[int(selection)]['name'])
-            display_tasks(tasks)
-            break
-        except KeyError:
-            input(f"Your selection {selection} is not valid, press enter to try again")
+    selection = input("Enter employee name to search for:\n>").strip()
+    possible_matches = Task.select(
+        Task.employee, fn.COUNT(Task.id).alias('count')).group_by(
+        Task.employee).where(Task.employee.contains(selection))
+    if int(possible_matches.count()) > 1:
+        employees = {}
+        for i, t in enumerate(possible_matches):
+            employees[i] = {'id': t.id, 'name': t.employee, "count": t.count}
+            print(f"{str(i)}) {t.employee.capitalize()} has {t.count} entries")
+        while True:
+            try:
+                selection = input(f"Enter # to view all entries from {selection}:\n> ").strip()
+                tasks = Task.select().where(Task.employee == employees[int(selection)]['name'])
+                display_tasks(tasks)
+                break
+            except:
+                input(f"Your selection {selection} is not valid, press enter to continue")
+    else:
+        while True:
+            try:
+                tasks = Task.select().where(
+                    Task.employee == possible_matches[0].employee)
+                display_tasks(tasks)
+                break
+            except IndexError:
+                input("There are no logs found to be shown!, press enter to continue")
+                break
+            except:
+                input(f"Your selection {selection} is not valid, press enter to continue")
 
 
 def find_by_date():
@@ -90,6 +104,26 @@ def find_by_date():
             break
         except:
             input(f"Your selection {selection} is not valid, press enter to try again")
+
+
+def find_by_date_range():
+    """Find by Given the date range"""
+    clear_screen()
+    while True:
+        try:
+            selection = input("Enter date range for finding entries in between "
+                              "(ex. 01/01/2010-12/29/2018): \n>").strip()
+            if not len(re.findall(r'\d{2}/\d{2}/\d{4}-\d{2}/\d{2}/\d{4}',
+                                  selection)) == 1:
+                raise ValueError
+            parsed_date_low, parsed_date_high = selection.split("-")
+            tasks = Task.select().where(
+                Task.startdate.between(parsed_date_low, parsed_date_high))
+            display_tasks(tasks)
+            break
+        except:
+            print("Format of your selection should be MM/DD/YYYY-MM/DD/YYYY")
+            input(f"Your selection {selection} is not valid, press enter to continue")
 
 
 def find_by_time_spent():
@@ -155,7 +189,8 @@ def view_work():
         ('a', find_by_employee),
         ('b', find_by_date),
         ('c', find_by_time_spent),
-        ('d', find_by_search_term)
+        ('d', find_by_search_term),
+        ('e', find_by_date_range)
     ])
     choice = None
     clear_screen()
