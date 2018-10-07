@@ -1,20 +1,17 @@
 import os
-import sys
+import re
 
 import datetime
 
-sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 from collections import OrderedDict
-
 from peewee import *
-
-from project_4.models import db, Task
-
+from models import db, Task
 
 
 def clear_screen():
     os.system('clear')
     print()
+
 
 def display_tasks(tasks):
     if len(tasks) == 0:
@@ -24,6 +21,8 @@ def display_tasks(tasks):
     while 0 <= index < len(tasks):
         t = tasks[index]
         clear_screen()
+        print(f"Task Date: {t.startdate.strftime('%m/%d/%Y')}")
+        print(f"Employee Name: {t.employee}")
         print(f"Task Name: {t.task}")
         print(f"Task Duration: {str(t.duration)}")
         print(f"Task Notes: {t.notes}")
@@ -43,7 +42,7 @@ def display_tasks(tasks):
         elif letter == 'N':
             index += 1
         elif letter == 'P':
-            index -=1
+            index -= 1
         elif letter == 'E':
             edit_work(t)
         elif letter == 'D':
@@ -55,7 +54,9 @@ def find_by_employee():
     employees = {}
     clear_screen()
     print("Choose one of the employee to see what he/she worked on: \n")
-    for i,t in enumerate(Task.select(Task.employee, fn.COUNT(Task.id).alias('count')).group_by(Task.employee).order_by(fn.COUNT(Task.id).desc())):
+    for i, t in enumerate(Task.select(Task.employee,
+                                      fn.COUNT(Task.id).alias('count')
+                                      ).group_by(Task.employee).order_by(fn.COUNT(Task.id).desc())):
         employees[i] = {'id': t.id, 'name': t.employee, "count": t.count}
         print(f"{str(i)}) {t.employee.capitalize()} has {t.count} entries")
     while True:
@@ -73,14 +74,18 @@ def find_by_date():
     clear_screen()
     dates = {}
     while True:
-        print("Choose one of the dates with work logged on:\n")
-        for i,t in enumerate(Task.select(Task.startdate, fn.COUNT(Task.id).alias('count')).group_by(Task.startdate)
-                             .order_by(fn.COUNT(Task.id).desc())):
-            dates[i] = {"date": t.startdate, 'count': t.count}
-            print(f"{str(i)}) {t.startdate} has {t.count} entries")
+        # print("Choose one of the dates with work logged on:\n")
+        # for i,t in enumerate(Task.select(Task.startdate, fn.COUNT(Task.id).alias('count')
+        #                                  ).group_by(Task.startdate)
+        #                      .order_by(fn.COUNT(Task.id).desc())):
+        #     dates[i] = {"date": t.startdate, 'count': t.count}
+        #     print(f"{str(i)}) {t.startdate} has {t.count} entries")
         try:
-            selection = int(input("Enter selection # for entries from that date (ex: 11/25/2018): \n> ").strip())
-            tasks = Task.select().where(Task.startdate == dates[selection]['date'])
+            selection = input("Enter date for entries on that date (ex. MM/DD/YYYY): \n> ").strip()
+            if not len(re.findall(r'\d{2}/\d{2}/\d{4}', selection)) == 1:
+                raise ValueError
+            parsed_date = datetime.datetime.strptime(selection, "%m/%d/%Y")
+            tasks = Task.select().where(Task.startdate == parsed_date)
             display_tasks(tasks)
             break
         except:
@@ -122,6 +127,7 @@ def edit_work(task):
         task.notes = new_notes
         task.save()
 
+
 def log_work():
     """Log your work for an employee"""
     clear_screen()
@@ -132,8 +138,8 @@ def log_work():
     # print("Enter you entry. Press ctrl+d when finished.")
     # notes = sys.stdin.read().strip()
     notes = input("Enter your additional notes: ").strip()
-    Task.create(employee=employee, task=task, duration=duration, startdate=startdate,
-                notes=notes if notes != '' else '')
+    Task.create(employee=employee, task=task, duration=duration,
+                startdate=startdate, notes=notes if notes != '' else '')
 
 
 def delete_work(task):
@@ -182,6 +188,7 @@ def main():
             menu[choice]()
 
     print("\nSee you next time")
+
 
 if __name__ == '__main__':
     db.connect()
