@@ -2,16 +2,15 @@ import os
 
 from peewee import *
 
-
-db = PostgresqlDatabase(os.getenv('PJ4_DB','test'), user='serhatbolsu', autocommit=True, autorollback=True)
+db = SqliteDatabase('tasks.db')
 
 
 class Task(Model):
     employee = CharField(max_length=100)
-    startdate = DateField(formats=["%m/%d/%Y"])
+    startdate = DateField()
     duration = IntegerField()
     task = CharField()
-    notes = TextField(default='')
+    notes = TextField()
 
     def __str__(self):
         return self.task

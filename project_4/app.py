@@ -81,6 +81,7 @@ def find_by_employee():
                 break
             except:
                 input(f"Your selection {selection} is not valid, press enter to continue")
+                break
 
 
 def find_by_date():
@@ -117,13 +118,17 @@ def find_by_date_range():
                                   selection)) == 1:
                 raise ValueError
             parsed_date_low, parsed_date_high = selection.split("-")
+            date_low = datetime.datetime.strptime(parsed_date_low, '%m/%d/%Y')
+            date_high = datetime.datetime.strptime(parsed_date_high, '%m/%d/%Y')
+            if date_low > date_high:
+                raise ValueError
             tasks = Task.select().where(
-                Task.startdate.between(parsed_date_low, parsed_date_high))
+                Task.startdate.between(date_low, date_high))
             display_tasks(tasks)
             break
         except:
-            print("Format of your selection should be MM/DD/YYYY-MM/DD/YYYY")
-            input(f"Your selection {selection} is not valid, press enter to continue")
+            print("Format of your selection should be MM/DD/YYYY-MM/DD/YYYY and low to high")
+            input(f"Your selection {selection} is not valid, press enter to continue\n")
 
 
 def find_by_time_spent():
@@ -145,8 +150,8 @@ def edit_work(task):
     selection = input("""Which part would you like to edit: \n
      [date/name/duration/notes]\n> """).lower().strip()
     if selection == 'date':
-        new_date = input("Enter a new date (DD/MM/YYYY): ").strip()
-        task.startdate = datetime.datetime.strptime(new_date, "%d/%m/%Y").date()
+        new_date = input("Enter a new date (MM/DD/YYYY): ").strip()
+        task.startdate = datetime.datetime.strptime(new_date, "%m/%d/%Y").date()
         task.save()
     elif selection == 'name':
         new_name = input("Enter a new task name: ").strip()
@@ -168,7 +173,7 @@ def log_work():
     employee = input("Enter your name: ").lower().strip()
     task = input("Enter your task: ").strip()
     duration = int(input("Enter how many minutes your worked: ").lower().strip())
-    startdate = datetime.datetime.now().strftime('%m/%d/%Y')
+    startdate = datetime.datetime.now().date()
     # print("Enter you entry. Press ctrl+d when finished.")
     # notes = sys.stdin.read().strip()
     notes = input("Enter your additional notes: ").strip()

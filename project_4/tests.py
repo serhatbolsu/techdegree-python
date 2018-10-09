@@ -100,8 +100,8 @@ class CRUDTests(BaseTests):
                                  startdate=datetime.datetime.now().date(),
                                  duration=100, notes="I will handle this in no time")
         self.task2 = Task.create(employee="test_cruid", task="Thinking",
-                                 startdate=datetime.datetime.strptime("01/01/1990",
-                                                                      "%d/%m/%Y").date(),
+                                 startdate=datetime.datetime.strptime("1990-01-01",
+                                                                      "%Y-%m-%d").date(),
                                  duration=300, notes="I will handle this in no time")
         self.task3 = Task.create(employee="test_other_employee", task="Reading",
                                  startdate=datetime.datetime.now().date(),
